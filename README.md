@@ -1,4 +1,4 @@
-# My Personal Cluster
+# My Personal Kubernetes Cluster
 This is my attempt at creating a high availability kubernetes cluster using a bunch of old machines I had or have recently obtained.
 I tried to script as much as I can of the process itself. This assumes that the our subnet is 10.1.0.0/16
 

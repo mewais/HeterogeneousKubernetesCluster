@@ -6,14 +6,16 @@ cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
 deb https://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 sudo apt update && sudo apt install -y kubeadm kubelet docker.io keepalived
+
+# Enable Docker service
 sudo systemctl enable docker.service
 
 # Disable Swap
 sudo swapoff -a
 sudo sed -i.bak -r 's/(.+swap.+)/#\1/' /etc/fstab
 
+# Setup Keepalived for load balancing of masters
 # https://medium.com/velotio-perspectives/demystifying-high-availability-in-kubernetes-using-kubeadm-3d83ed8c458b
-# Setup Keepalived
 echo "! Configuration File for keepalived
 global_defs {
   router_id LVS_DEVEL
@@ -58,22 +60,33 @@ fi" | sudo tee /etc/keepalived/check_apiserver.sh
 tail -n +2 /etc/keepalived/check_apiserver.sh > check_apiserver.tmp
 sudo mv check_apiserver.tmp /etc/keepalived/check_apiserver.sh
 sudo chmod +x /etc/keepalived/check_apiserver.sh
+
+# Restart Keepalived for the configuration to take place
 sudo systemctl restart keepalived
 
-# https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/
 # Initialize Control Plane
+# https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/
 sudo kubeadm init --control-plane-endpoint "10.1.1.100:6443" --pod-network-cidr=10.2.0.0/16 --upload-certs &> init.log
+
+# Create join scripts for masters and workers
 cat init.log | grep -A 2 "  kubeadm join" &> master_join.sh
 chmod +x master_join.sh
 tail -n2 init.log &> worker_join.sh
 chmod +x worker_join.sh
+
+# Define all hosts
 cat hosts | sudo tee -a /etc/hosts
+
+# Copy the kube config file
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+# Install Calico network plugin
 wget https://docs.projectcalico.org/v3.11/manifests/calico.yaml
 grep -rlZPi '192.168.0.0' | xargs -0r perl -pi -e 's/192.168.0.0/10.2.0.0/gi;'
 sudo kubectl apply -f calico.yaml
 rm calico.yaml -rf
+
+# Check state of master
 sudo kubectl get pod -n kube-system -w
-# sudo reboot

@@ -1,0 +1,57 @@
+{
+  "clusters": [
+    {
+      "nodes": [
+        {
+          "node": {
+            "hostnames": {
+              "manage": [
+                "storage-worker-01"
+              ],
+              "storage": [
+                "10.1.2.1"
+              ]
+            },
+            "zone": 1
+          },
+          "devices": [
+            "/dev/sdb",
+            "/dev/sdc"
+          ]
+        },
+        {
+          "node": {
+            "hostnames": {
+              "manage": [
+                "storage-worker-02"
+              ],
+              "storage": [
+                "10.1.2.2"
+              ]
+            },
+            "zone": 1
+          },
+          "devices": [
+            "/dev/sdb"
+          ]
+        },
+		{
+          "node": {
+            "hostnames": {
+              "manage": [
+                "storage-worker-03"
+              ],
+              "storage": [
+                "10.1.2.3"
+              ]
+            },
+            "zone": 1
+          },
+          "devices": [
+            "/dev/sdb"
+          ]
+        }
+      ]
+    }
+  ]
+}

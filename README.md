@@ -3,9 +3,9 @@ This is my attempt at creating a high availability kubernetes cluster using a bu
 I tried to script as much as I can of the process itself. This assumes that the our subnet is 10.1.0.0/16
 
 This was tested using Ubuntu Server 18.04, it has the following topology:
-- 3 master nodes, providing high availability if one or more fails, these nodes also host the etcd service, and they use keepalived for load balancing which gives them a virtual master IP. The number of masters can easily be increased by modifying the priority number in the `master-0n_setup.sh` file.
-- 3 worker nodes that also serve as storage nodes, these serve as normal workers, but they also host GlusterFS cloud storage for persistent storage across our cluster. These can also be easily increased by running `storage-worker_setup.sh` on more nodes.
-- 4 worker nodes. Just like before, the number of those can also increase by running `worker_setup.sh` on more nodes.
+- 3 master nodes, providing high availability if one or more fails, these nodes also host the etcd service, and they use keepalived for load balancing which gives them a virtual master IP. The number of masters can easily be increased or decreased by adding/deleting `master-0n_setup.sh` files and modifying the priority numbers in them.
+- 3 worker nodes that also serve as storage nodes, these serve as normal workers, but they also host GlusterFS cloud storage for persistent storage across our cluster. These can also be easily increased by running `storage-worker_setup.sh` on more nodes. Unfortunately they cannot be decreased as the minimum for GlusterFS and Heketi is 3 nodes.
+- 4 worker nodes. Just like before, the number of those can also increase or decrease by running `worker_setup.sh` on more or less nodes.
 
 ## How to setup
 - run `git clone https://github.com/mewais/KubernetesCluster.git && cd KubernetesCluster`
@@ -42,10 +42,10 @@ This was tested using Ubuntu Server 18.04, it has the following topology:
 - storage-worker-01: 10.1.2.1
 - storage-worker-02: 10.1.2.2
 - storage-worker-03: 10.1.2.3
-- worker-01: 10.1.2.101
-- worker-02: 10.1.2.102
-- worker-03: 10.1.2.103
-- worker-04: 10.1.2.104
+- worker-01: 10.1.3.1
+- worker-02: 10.1.3.2
+- worker-03: 10.1.3.3
+- worker-04: 10.1.3.4
 
 ### Pods
 The pods subnet is 10.2.0.0/16

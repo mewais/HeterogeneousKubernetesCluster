@@ -27,6 +27,7 @@ This was tested using Ubuntu Server 18.04, it has the following topology:
 - You can use the utility script `gen_storage_topology.sh` to create a new `storage_topology.json` based on your modified `hosts` file.
 - Copy `storage-worker_setup.sh` and `storage_topology.json` to your master
 - SSH to the master and run `storage-worker_setup.sh`
+- Copy `~/.kube/config` from `master-01` to your local machine, this allows you to run `kubectl` command from your local machine without having to SSH.
 
 ## IPs
 ### Service
@@ -49,6 +50,9 @@ This was tested using Ubuntu Server 18.04, it has the following topology:
 
 ### Pods
 The pods subnet is 10.10.10.0/16
+
+## Deployments
+The `deployments` folder includes some useful things that you may be interested in deploying on your cluster, you can visit the directory's `README.md` file for more details.
 
 ## TODOs
 Add support for nvidia nodes.

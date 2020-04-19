@@ -21,13 +21,15 @@ This was tested using Ubuntu Server 18.04, it has the following topology:
   - the script will copy the add master script from host1 and will ask you for the password (for scp).
 - Repeat the same process with `master-03_setup.sh`
   - This is really exactly the same as `master-02_setup.sh`, it just has lower priority for keepalived.
-- Copy `hosts` and `worker_setup.sh` to your workers and storage workers
-- On each worker (and storage worker), run `./worker_setup.sh`
+- Copy `hosts` and `worker_setup.sh` to your workers
+- On each worker, run `./worker_setup.sh`
   - This will copy the worker join script from master-01 and join the cluster
-- You can use the utility script `gen_storage_topology.sh` to create a new `storage_topology.json` based on your modified `hosts` file.
-- Copy `storage-worker_setup.sh` and `storage_topology.json` to your master
-- SSH to the master and run `storage-worker_setup.sh`
+- Copy `hosts` and `storage-worker_setup.sh` to your storage workers
+- On each worker, run `./storage-worker_setup.sh`
+  - This will copy the worker join script from master-01 and join the cluster
+  - It will also install some prerequisites for storage deployment
 - Copy `~/.kube/config` from `master-01` to your local machine, this allows you to run `kubectl` command from your local machine without having to SSH.
+- Visit the `deployments` directory to find some useful deployments, including storage.
 
 ## IPs
 ### Service

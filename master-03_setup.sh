@@ -39,7 +39,7 @@ vrrp_instance VI_1 {
         auth_pass PASSWORD
     }
     virtual_ipaddress {
-        10.1.1.100
+        10.10.1.100
     }
     track_script {
         check_apiserver
@@ -54,8 +54,8 @@ errorExit() {
 }
 
 curl --silent --max-time 2 --insecure https://localhost:6443/ -o /dev/null || errorExit \"Error GET https://localhost:6443/\"
-if ip addr | grep -q 10.1.1.100; then
-    curl --silent --max-time 2 --insecure https://10.1.1.100:6443/ -o /dev/null || errorExit \"Error GET https://10.1.1.100:6443/\"
+if ip addr | grep -q 10.10.1.100; then
+    curl --silent --max-time 2 --insecure https://10.10.1.100:6443/ -o /dev/null || errorExit \"Error GET https://10.10.1.100:6443/\"
 fi" | sudo tee /etc/keepalived/check_apiserver.sh
 tail -n +2 /etc/keepalived/check_apiserver.sh > check_apiserver.tmp
 sudo mv check_apiserver.tmp /etc/keepalived/check_apiserver.sh

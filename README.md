@@ -1,6 +1,6 @@
 # My Personal Kubernetes Cluster
 This is my attempt at creating a high availability kubernetes cluster using a bunch of old machines I had or have recently obtained.
-I tried to script as much as I can of the process itself. This assumes that the our subnet is 10.1.0.0/16
+I tried to script as much as I can of the process itself. This assumes that the our subnet is 10.10.0.0/16
 
 This was tested using Ubuntu Server 18.04, it has the following topology:
 - 3 master nodes, providing high availability if one or more fails, these nodes also host the etcd service, and they use keepalived for load balancing which gives them a virtual master IP. The number of masters can easily be increased or decreased by adding/deleting `master-0n_setup.sh` files and modifying the priority numbers in them.
@@ -30,25 +30,25 @@ This was tested using Ubuntu Server 18.04, it has the following topology:
 
 ## IPs
 ### Service
-- Gateway: 10.1.0.1
+- Gateway: 10.10.0.1
 
 ### Masters
-- master-01: 10.1.1.1
-- master-02: 10.1.1.2
-- master-03: 10.1.1.3
-- virtual-master: 10.1.1.100
+- master-01: 10.10.1.1
+- master-02: 10.10.1.2
+- master-03: 10.10.1.3
+- virtual-master: 10.10.1.100
 
 ### Workers
-- storage-worker-01: 10.1.2.1
-- storage-worker-02: 10.1.2.2
-- storage-worker-03: 10.1.2.3
-- worker-01: 10.1.3.1
-- worker-02: 10.1.3.2
-- worker-03: 10.1.3.3
-- worker-04: 10.1.3.4
+- storage-worker-01: 10.10.2.1
+- storage-worker-02: 10.10.2.2
+- storage-worker-03: 10.10.2.3
+- worker-01: 10.10.3.1
+- worker-02: 10.10.3.2
+- worker-03: 10.10.3.3
+- worker-04: 10.10.3.4
 
 ### Pods
-The pods subnet is 10.2.0.0/16
+The pods subnet is 10.10.10.0/16
 
 ## TODOs
 Add support for nvidia nodes.

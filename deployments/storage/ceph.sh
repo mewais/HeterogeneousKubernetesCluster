@@ -14,3 +14,6 @@ rm final_cluster.yaml
 
 # Configure Block Storage
 kubectl apply -f storageclass.yaml
+
+# Expose dashboard
+kubectl create -f dashboard.yaml

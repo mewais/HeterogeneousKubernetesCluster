@@ -1,0 +1,10 @@
+        nodes:
+            - name: "10.10.2.1"
+              devices:
+                - name: "/dev/sdb"
+            - name: "10.10.2.2"
+              devices:
+                - name: "/dev/sdb"
+            - name: "10.10.2.3"
+              devices:
+                - name: "/dev/sdb"

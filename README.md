@@ -53,5 +53,4 @@ The pods subnet is 10.10.10.0/16
 The `deployments` folder includes some useful things that you may be interested in deploying on your cluster, you can visit the directory's `README.md` file for more details.
 
 ## TODOs
-- Make weavescope and ceph-dashboard available externelly
 - Add support for nvidia nodes.

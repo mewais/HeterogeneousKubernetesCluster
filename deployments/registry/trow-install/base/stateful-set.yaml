@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: trow-set
+spec:
+  selector:
+    matchLabels:
+      app: trow
+  serviceName: trow
+  template:
+    metadata:
+      labels:
+        app: trow
+    spec:
+      containers:
+      - name: trow-pod
+        image: containersol/trow:0.2
+        args: 
+          - "--no-tls" 
+          - "-n" 
+          - "myregistry.mydomain.io" 
+          - "-u" 
+          - "myuser" 
+          - "--password-file" 
+          - "/etc/trow/pass"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        - name: data-vol
+          mountPath: /data
+        - name: trow-pass
+          mountPath: /etc/trow
+          readOnly: true
+      volumes:
+        - name: trow-pass
+          secret:
+            secretName: trow-pass
+            items:
+              - key: pass
+                path: pass
+      securityContext:             
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+  volumeClaimTemplates:
+    - metadata:
+        name: data-vol
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "rook-ceph-block"
+        resources:
+          requests:
+            storage: 20Gi

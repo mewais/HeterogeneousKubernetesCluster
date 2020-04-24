@@ -1,0 +1,42 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: trow
+
+bases:
+  - ../cert-manager-nginx
+
+generatorOptions:
+    disableNameSuffixHash: true
+
+secretGenerator:
+  - name: trow-pass
+    literals:
+    - pass=Hafsha5ak.Fi,Afkarak
+  - name: trow-cred
+    type: docker-registry
+    literals:
+    - docker-server=trow.local
+    - docker-username=mewais
+    - docker-password=Hafsha5ak.Fi,Afkarak
+
+patchesJson6902:
+  - path: patch-ingress-host.yaml
+    target:
+      kind: Ingress
+      name: trow-ingress
+      group: extensions
+      version: v1beta1
+  - path: patch-trow-arg.yaml
+    target:
+      kind: StatefulSet
+      name: trow-set
+      group: apps
+      version: v1
+
+#    - path: patch-validator-domain.yaml
+#      target:
+#        kind: ValidatingWebhookConfiguration
+#        name: trow-validator
+#        group: admissionregistration.k8s.io
+#        version: v1

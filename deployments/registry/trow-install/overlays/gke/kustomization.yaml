@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# This will configure Trow for running on GKE, using the default ingress and a Google
+# ManagedCertificate. You will need to point your (sub)domain DNS at the ingress IP address. It will
+# take some time for the ingress and certificate to be provisioned.
+
+namespace: trow
+
+bases:
+    - ../../base
+
+resources:
+    - cert.yaml # Needs to be updated with your domain name, see patches below.
+    - ingress.yaml
+
+# The following patch updates the certificate domain name without editing the yaml. 
+# Create your own version of the patch file with your domain name and reference in your overlay as
+# below:
+
+#patchesJson6902:
+#    - path: patch-cert-domain.yaml
+#      target:
+#        kind: ManagedCertificate
+#        name: trow-certificate
+#        group: networking.gke.io
+#        version: v1beta1

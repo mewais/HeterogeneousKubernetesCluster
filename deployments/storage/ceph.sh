@@ -17,3 +17,6 @@ kubectl apply -f storageclass.yaml
 
 # Expose dashboard
 kubectl create -f dashboard.yaml
+
+# Make storage class default
+kubectl patch storageclass rook-ceph-block -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-defaultclass":"true"}}}'

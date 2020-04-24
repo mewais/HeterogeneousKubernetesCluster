@@ -7,11 +7,12 @@ if [[ $# -ne 2 ]]; then
 fi
 
 IPs=( $(cat $1 | grep storage | cut -d' ' -f1) )
+hostnames=( $(cat $1 | grep storage | cut -d' ' -f2) )
 
 echo -e "        nodes:" > $2
-for (( i=0; i<${#IPs[@]}; i++ ));
+for (( i=0; i<${#hostnames[@]}; i++ ));
 do
-	echo -e "            - name: \"${IPs[$i]}\"" >> $2
+	echo -e "            - name: \"${hostnames[$i]}\"" >> $2
 	echo -e "              devices:" >> $2
-	echo -e "                - name: \"/dev/sdb\"" >> $2
+	echo -e "                - name: \"sdb\"" >> $2
 done

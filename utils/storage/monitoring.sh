@@ -5,4 +5,4 @@ kubectl -n rook-ceph get secret rook-ceph-dashboard-password -o jsonpath="{['dat
 
 echo "And your dashboard is at: "
 PORT=$(kubectl -n rook-ceph get service | grep external | tr -s ' ' | cut -d" " -f5 | cut -d":" -f2 | cut -d"/" -f1)
-echo "10.10.1.100:$PORT"
+echo "https://10.10.1.100:$PORT"

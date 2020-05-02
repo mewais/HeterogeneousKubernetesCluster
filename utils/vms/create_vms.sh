@@ -64,7 +64,7 @@ create_storage_worker_vm() {
     vboxmanage storageattach "storage-worker-0$1" --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium $2/storage-worker-0$1/root_disk.vdi
     # Create data disk
     vboxmanage createhd --filename $2/storage-worker-0$1/data_disk.vdi --size 30000 --format VDI
-    vboxmanage storageattach "storage-worker-0$1" --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium $2/storage-worker-0$1/data_disk.vdi
+    vboxmanage storageattach "storage-worker-0$1" --storagectl "SATA Controller" --port 1 --device 0 --type hdd --medium $2/storage-worker-0$1/data_disk.vdi
     # Attach Ubuntu 20.20 server image
     vboxmanage storagectl "storage-worker-0$1" --name "IDE Controller" --add ide --controller PIIX4
     vboxmanage storageattach "storage-worker-0$1" --storagectl "IDE Controller" --port 1 --device 0 --type dvddrive --medium $2/ubuntu.iso

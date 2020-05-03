@@ -14,3 +14,4 @@ echo "Starting Workers"
 vboxmanage startvm worker-01 --type headless
 vboxmanage startvm worker-02 --type headless
 vboxmanage startvm worker-03 --type headless
+vboxmanage startvm worker-04 --type headless

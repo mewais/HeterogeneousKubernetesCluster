@@ -14,3 +14,4 @@ echo "Starting Workers"
 vboxmanage controlvm worker-01 savestate
 vboxmanage controlvm worker-02 savestate
 vboxmanage controlvm worker-03 savestate
+vboxmanage controlvm worker-04 savestate

@@ -14,6 +14,11 @@ sudo systemctl enable docker.service
 sudo swapoff -a
 sudo sed -i.bak -r 's/(.+swap.+)/#\1/' /etc/fstab
 
+# Disable IPv6, sometimes breaks Calico
+echo "net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.conf
+
 # Define all hosts
 cat hosts | sudo tee -a /etc/hosts
 

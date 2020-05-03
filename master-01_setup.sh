@@ -14,6 +14,11 @@ sudo systemctl enable docker.service
 sudo swapoff -a
 sudo sed -i.bak -r 's/(.+swap.+)/#\1/' /etc/fstab
 
+# Disable IPv6, sometimes breaks Calico
+echo "net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1" | sudo tee -a /etc/sysctl.conf
+
 # Setup Keepalived for load balancing of masters
 # https://medium.com/velotio-perspectives/demystifying-high-availability-in-kubernetes-using-kubeadm-3d83ed8c458b
 echo "! Configuration File for keepalived

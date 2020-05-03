@@ -90,8 +90,8 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 # Install Calico network plugin
 wget https://docs.projectcalico.org/v3.11/manifests/calico.yaml
 grep -rlZPi '192.168.0.0' | xargs -0r perl -pi -e 's/192.168.0.0/10.2.0.0/gi;'
-sudo kubectl apply -f calico.yaml
+kubectl apply -f calico.yaml
 rm calico.yaml -rf
 
 # Check state of master
-sudo kubectl get pod -n kube-system -w
+kubectl get pod -n kube-system -w

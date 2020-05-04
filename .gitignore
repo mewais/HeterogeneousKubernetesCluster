@@ -1,2 +1,3 @@
 deployments/storage/final_cluster.yaml
 deployments/registry/trow/
+deployments/monitoring/scope.yaml

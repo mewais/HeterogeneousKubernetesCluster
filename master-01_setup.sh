@@ -71,7 +71,7 @@ sudo systemctl restart keepalived
 
 # Initialize Control Plane
 # https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/
-sudo kubeadm init --control-plane-endpoint "10.10.1.100:6443" --pod-network-cidr=10.2.0.0/16 --upload-certs &> init.log
+sudo kubeadm init --control-plane-endpoint "10.10.1.100:6443" --pod-network-cidr=10.10.10.0/24 --service-cidr=10.10.11.0/24 --upload-certs &> init.log
 
 # Create join scripts for masters and workers
 cat init.log | grep -A 2 "  kubeadm join" &> master_join.sh
@@ -89,7 +89,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 # Install Calico network plugin
 wget https://docs.projectcalico.org/v3.11/manifests/calico.yaml
-grep -rlZPi '192.168.0.0' | xargs -0r perl -pi -e 's/192.168.0.0/10.2.0.0/gi;'
+grep -rlZPi '192.168.0.0' | xargs -0r perl -pi -e 's/192.168.0.0\/16/10.10.10.0\/24/gi;'
 kubectl apply -f calico.yaml
 rm calico.yaml -rf
 

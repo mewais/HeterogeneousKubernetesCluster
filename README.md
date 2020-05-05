@@ -11,6 +11,7 @@ This was tested using Ubuntu Server 18.04, it has the following topology:
 - run `git clone https://github.com/mewais/KubernetesCluster.git && cd KubernetesCluster`
 - The files contain password fields that need to be modified, you can do so by running `grep -rlZPi 'PASSWORD' | xargs -0r perl -pi -e 's/PASSWORD/YOUR_NEW_PASSWORD/gi;'`, obviously change YOUR_NEW_PASSWORD to your password.
 - modify your `hosts` file as needed, you may also need to modify the IP addresses in the `master-0n_setup.sh` files.
+  - The IPs in the master scripts include the POD IPs, Service IPs, and the virtual master IP
 - Copy `hosts` and `master-01_setup.sh` to the first master.
 - SSH to the first master and run `./master-01_setup.sh`
   - The script will insert the hosts into the `/etc/hosts` file
@@ -46,8 +47,9 @@ This was tested using Ubuntu Server 18.04, it has the following topology:
 - worker-03: 10.10.3.3
 - worker-04: 10.10.3.4
 
-### Pods
-The pods subnet is 10.10.10.0/16
+### Pods and Services
+- The pods subnet is 10.10.10.0/24
+- The service subnet is 10.10.11.0/24
 
 ## Deployments
 The `deployments` folder includes some useful things that you may be interested in deploying on your cluster, you can visit the directory's `README.md` file for more details.

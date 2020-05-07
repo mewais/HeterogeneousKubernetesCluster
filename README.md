@@ -47,6 +47,9 @@ This was tested using Ubuntu Server 18.04, it has the following topology:
 - worker-02: 10.10.3.2
 - worker-03: 10.10.3.3
 - worker-04: 10.10.3.4
+- fpga-worker-01: 10.10.4.1
+- fpga-worker-02: 10.10.4.2
+- fpga-worker-03: 10.10.4.3
 
 ### Pods and Services
 - The pods subnet is 10.10.10.0/24

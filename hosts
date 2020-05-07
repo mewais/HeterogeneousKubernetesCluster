@@ -9,6 +9,6 @@
 10.10.3.2 worker-02
 10.10.3.3 worker-03
 10.10.3.4 worker-04
-10.10.4.1 gpu-worker-01
-10.10.4.2 gpu-worker-02
-10.10.4.3 gpu-worker-03
+10.10.4.1 fpga-worker-01
+10.10.4.2 fpga-worker-02
+10.10.4.3 fpga-worker-03

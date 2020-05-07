@@ -1,11 +1,12 @@
-# My Personal Kubernetes Cluster
-This is my attempt at creating a high availability kubernetes cluster using a bunch of old machines I had or have recently obtained.
-I tried to script as much as I can of the process itself. This assumes that the our subnet is 10.10.0.0/16
+# Heterogeneous Kubernetes Cluster
+This is my attempt at creating a high availability, heterogeneous kubernetes cluster, consisting of CPUs (ARM and x86_64), FPGAs, GPUs, and storage. This is still a work in progress, so be careful when using.
+I tried to script as much as I can of the process itself. This assumes that the our subnet is 10.10.0.0/16.
 
 This was tested using Ubuntu Server 18.04, it has the following topology:
-- 3 master nodes, providing high availability if one or more fails, these nodes also host the etcd service, and they use keepalived for load balancing which gives them a virtual master IP. The number of masters can easily be increased or decreased by adding/deleting `master-0n_setup.sh` files and modifying the priority numbers in them.
-- 3 worker nodes that also serve as storage nodes, these serve as normal workers, but they also host GlusterFS cloud storage for persistent storage across our cluster. These can also be easily increased by running `storage-worker_setup.sh` on more nodes. Unfortunately they cannot be decreased as the minimum for GlusterFS and Heketi is 3 nodes.
-- 4 worker nodes. Just like before, the number of those can also increase or decrease by running `worker_setup.sh` on more or less nodes.
+- 3 master nodes, providing high availability if one or more fails, these nodes also host the etcd service, and they use keepalived for load balancing which gives them a virtual master IP. The number of masters can easily be increased by adding/deleting `master-0n_setup.sh` files and modifying the priority numbers in them.
+- 3 worker nodes that also serve as storage nodes, these serve as normal workers, but they also host Ceph cloud storage for persistent storage across our cluster. These can also be easily increased by adding more `storage-worker-xx` to the `hosts` file and running `worker_setup.sh` on them. By default, ceph will use `/dev/sdb` on all `storage-worker-xx` nodes, if you want to change the disks you will have to modify `deployments/storage/gen_devices.sh` or `deployments/storage/devices.yaml`.
+- 4 worker nodes, the number of those can also increase or decrease by adding/removing them to the `hosts` file and running `worker_setup.sh` on them.
+- 3 FPGA nodes, currently this was only tested with Xilinx UltraScale+ SoCs, which include ARM64 processors as well as the FPGA. Note that for those to work correctly, the Linux kernel has to support certain kernel modules and network options, you can find a linux config file in `utils/linux-xlnx/defconfig` that works well for kernel version 4.14.0. As usual, the number of nodes can be increased or decreased like any other worker node
 
 ## How to setup
 - run `git clone https://github.com/mewais/KubernetesCluster.git && cd KubernetesCluster`
@@ -19,14 +20,14 @@ This was tested using Ubuntu Server 18.04, it has the following topology:
   - After the script is done, it will generate an `init.log` file which you should keep, it will also generate two shell scripts for adding extra masters and workers.
 - Copy `hosts` and `master-02_setup.sh` to the second master.
   - The script will insert the hosts into the `/etc/hosts` file
-  - the script will copy the add master script from host1 and will ask you for the password (for scp).
+  - the script will copy the add master script from `master-01` and will ask you for the password (for scp).
 - Repeat the same process with `master-03_setup.sh`
   - This is really exactly the same as `master-02_setup.sh`, it just has lower priority for keepalived.
-- Copy `hosts` and `worker_setup.sh` to your workers and storage workers
+- Copy `hosts` and `worker_setup.sh` to your workers, storage workers, and FPGA workers.
 - On each worker, run `./worker_setup.sh`
   - This will copy the worker join script from master-01 and join the cluster
 - Copy `~/.kube/config` from `master-01` to your local machine, this allows you to run `kubectl` command from your local machine without having to SSH.
-- Visit the `deployments` directory to find some useful deployments, including storage.
+- Visit the `deployments` directory to find some useful deployments, including storage, monitoring, and a local image registry.
 
 ## IPs
 ### Service
@@ -53,6 +54,9 @@ This was tested using Ubuntu Server 18.04, it has the following topology:
 
 ## Deployments
 The `deployments` folder includes some useful things that you may be interested in deploying on your cluster, you can visit the directory's `README.md` file for more details.
+
+## Utils
+The `utils` folder includes some useful utilities. Including scripts for building, launching, and pausing VMs for testing, configs for ARM Linux kernels to work fine with k8s, and commands to view dashboards.
 
 ## TODOs
 - Consider using KubeVirt for VMs.

@@ -28,6 +28,7 @@ This was tested using Ubuntu Server 18.04, it has the following topology:
   - This will copy the worker join script from master-01 and join the cluster
 - Copy `~/.kube/config` from `master-01` to your local machine, this allows you to run `kubectl` command from your local machine without having to SSH.
 - Visit the `deployments` directory to find some useful deployments, including storage, monitoring, and a local image registry.
+  - Currently, and according to [this issue](https://github.com/ceph/ceph-csi/issues/1003), Rook-Ceph storage doesn't have full multiarch support. So for now, it has to be installed before any ARM64 nodes join the cluster.
 
 ## IPs
 ### Service

@@ -5,7 +5,8 @@ curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add
 cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
 deb https://apt.kubernetes.io/ kubernetes-xenial main
 EOF
-sudo apt update && sudo apt install -y kubeadm kubelet docker.io keepalived
+sudo apt update && sudo apt install -y kubeadm=1.18.2-00 kubelet=1.18.2-00 docker.io keepalived
+sudo cp ~/kubelet-amd64 /usr/bin/kubelet
 
 # Enable Docker service
 sudo systemctl enable docker.service
@@ -44,7 +45,7 @@ vrrp_instance VI_1 {
         auth_pass PASSWORD
     }
     virtual_ipaddress {
-        10.10.1.100
+        10.84.31.100
     }
     track_script {
         check_apiserver
@@ -59,8 +60,8 @@ errorExit() {
 }
 
 curl --silent --max-time 2 --insecure https://localhost:6443/ -o /dev/null || errorExit \"Error GET https://localhost:6443/\"
-if ip addr | grep -q 10.10.1.100; then
-    curl --silent --max-time 2 --insecure https://10.10.1.100:6443/ -o /dev/null || errorExit \"Error GET https://10.10.1.100:6443/\"
+if ip addr | grep -q 10.84.31.100; then
+    curl --silent --max-time 2 --insecure https://10.84.31.100:6443/ -o /dev/null || errorExit \"Error GET https://10.84.31.100:6443/\"
 fi" | sudo tee /etc/keepalived/check_apiserver.sh
 tail -n +2 /etc/keepalived/check_apiserver.sh > check_apiserver.tmp
 sudo mv check_apiserver.tmp /etc/keepalived/check_apiserver.sh
@@ -71,7 +72,7 @@ sudo systemctl restart keepalived
 
 # Initialize Control Plane
 # https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/
-sudo kubeadm init --control-plane-endpoint "10.10.1.100:6443" --pod-network-cidr=10.10.10.0/24 --service-cidr=10.10.11.0/24 --upload-certs &> init.log
+sudo kubeadm init --control-plane-endpoint "10.84.31.100:6443" --pod-network-cidr=10.84.64.0/18 --service-cidr=10.84.32.0/20 --upload-certs &> init.log
 
 # Create join scripts for masters and workers
 cat init.log | grep -A 2 "  kubeadm join" &> master_join.sh
@@ -89,7 +90,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 # Install Calico network plugin
 wget https://docs.projectcalico.org/v3.11/manifests/calico.yaml
-grep -rlZPi '192.168.0.0' | xargs -0r perl -pi -e 's/192.168.0.0\/16/10.10.10.0\/24/gi;'
+grep -rlZPi '192.168.0.0' | xargs -0r perl -pi -e 's/192.168.0.0\/16/10.84.64.0\/18/gi;'
 kubectl apply -f calico.yaml
 rm calico.yaml -rf
 

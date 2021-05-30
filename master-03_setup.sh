@@ -5,7 +5,8 @@ curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add
 cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
 deb https://apt.kubernetes.io/ kubernetes-xenial main
 EOF
-sudo apt update && sudo apt install -y kubeadm kubelet docker.io keepalived
+sudo apt update && sudo apt install -y kubeadm=1.18.2-00 kubelet=1.18.2-00 docker.io keepalived
+sudo cp ~/kubelet-amd64 /usr/bin/kubelet
 
 # Enable Docker service
 sudo systemctl enable docker.service
@@ -44,7 +45,7 @@ vrrp_instance VI_1 {
         auth_pass PASSWORD
     }
     virtual_ipaddress {
-        10.10.1.100
+        10.84.31.100
     }
     track_script {
         check_apiserver
@@ -59,8 +60,8 @@ errorExit() {
 }
 
 curl --silent --max-time 2 --insecure https://localhost:6443/ -o /dev/null || errorExit \"Error GET https://localhost:6443/\"
-if ip addr | grep -q 10.10.1.100; then
-    curl --silent --max-time 2 --insecure https://10.10.1.100:6443/ -o /dev/null || errorExit \"Error GET https://10.10.1.100:6443/\"
+if ip addr | grep -q 10.84.31.100; then
+    curl --silent --max-time 2 --insecure https://10.84.31.100:6443/ -o /dev/null || errorExit \"Error GET https://10.84.31.100:6443/\"
 fi" | sudo tee /etc/keepalived/check_apiserver.sh
 tail -n +2 /etc/keepalived/check_apiserver.sh > check_apiserver.tmp
 sudo mv check_apiserver.tmp /etc/keepalived/check_apiserver.sh
